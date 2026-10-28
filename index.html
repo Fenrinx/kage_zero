@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="dark" />
+  <title>KAGE//ZERO — Shinobi World</title>
+  <link rel="icon" href="/public/assets/shinobi-seal.svg" />
+  <link rel="stylesheet" href="/css/kage-13.css?v=14.6.6" />
+  <link rel="stylesheet" href="/css/kage-refinement.css?v=14.6.0" />
+  <link rel="stylesheet" href="/css/kage-obsidian-155.css?v=14.6.0" />
+<link rel="stylesheet" href="/css/kage-obsidian-156.css?v=156">
+<link rel="stylesheet" href="/css/kage-157.css?v=1457">
+  <link rel="stylesheet" href="/css/kage-dojutsu-158.css?v=14.5.8" />
+  <link rel="stylesheet" href="/css/kage-dojutsu-159.css?v=14.7.1" />
+  <link rel="stylesheet" href="/css/kage-160.css?v=14.6.0" />
+  <link rel="stylesheet" href="/css/kage-finish.css?v=14.6.7" />
+  <link rel="stylesheet" href="/css/kage-gm-polish.css?v=14.7.2" />
+  <link rel="stylesheet" href="/css/kage-player-polish.css?v=step4" />
+  <link rel="stylesheet" href="/css/kage-chat-fixed.css?v=14.7.3" />
+<link rel="stylesheet" href="/css/kage-natures-174.css?v=14.7.4">
+<link rel="stylesheet" href="/css/kage-map-stable-175.css?v=14.7.5" />
+<link rel="stylesheet" href="/css/kage-dossier-final-176.css?v=14.7.6" />
+<link rel="stylesheet" href="/css/kage-map-repair-177.css?v=14.7.8" />
+  <link rel="stylesheet" href="/css/kage-player-mobile-179.css?v=14.7.9" />
+  <link rel="stylesheet" href="/css/kage-mobile-bijuu-180.css?v=14.8.2" />
+<link rel="stylesheet" href="/css/kage-bijuu-184.css?v=14.8.4" />
+<link rel="stylesheet" href="/css/kage-mobile-navigation-191.css?v=14.9.1" />
+</head>
+<body>
+  <div class="grain"></div>
+  <header id="topbar" class="topbar"></header>
+  <main id="app" class="app-shell"></main>
+  <div id="toast-root" class="toast-root" aria-live="polite"></div>
+  <script>
+// Show the actual script URL and line instead of an unhelpful generic error.
+(function () {
+  function show(message, source, line, column) {
+    const host = document.getElementById('app');
+    if (!host || host.textContent.trim()) return;
+    const section = document.createElement('section');
+    section.className = 'panel';
+    const title = document.createElement('h2');
+    title.textContent = 'Ошибка интерфейса';
+    const detail = document.createElement('pre');
+    detail.style.cssText = 'white-space:pre-wrap;overflow-wrap:anywhere';
+    detail.textContent = [message, source ? 'Файл: ' + source : '', line ? 'Строка: ' + line + (column ? ', столбец: ' + column : '') : ''].filter(Boolean).join('\n');
+    const link = document.createElement('a');
+    link.href='/setup';link.className='soft-button';link.textContent='Открыть диагностику';
+    section.append(title,detail,link);host.replaceChildren(section);
+  }
+  window.addEventListener('error', e => {
+    if (e.target && e.target !== window && e.target.tagName === 'SCRIPT') {
+      show('Не удалось загрузить скрипт', e.target.src);return;
+    }
+    show(String(e.message || 'Неизвестная ошибка'),e.filename,e.lineno,e.colno);
+  }, true);
+  window.addEventListener('unhandledrejection', e => show(String(e.reason?.stack || e.reason?.message || e.reason || 'Неизвестная ошибка')));
+})();
+</script>
+<script type="module" src="/js/app.js?v=14.9.4"></script>
+<script type="module" src="/js/ui-90.js?v=14.9.4"></script>
+</body>
+</html>

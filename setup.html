@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="color-scheme" content="dark" />
+  <title>KAGE//ZERO — Setup</title>
+  <style>
+    .setup-wrap{max-width:1080px;margin:0 auto;padding:34px 22px 70px}.setup-hero{margin-bottom:18px}.setup-hero h1{font-size:2.15rem;margin:.25rem 0}.setup-hero p{color:var(--muted);max-width:760px;line-height:1.55}.setup-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:16px}.setup-card{padding:20px}.setup-card label{display:grid;gap:7px;margin-bottom:13px;color:#bbb7b0;font-size:.78rem}.setup-card input,.setup-card textarea{width:100%;background:#111214;border:1px solid #35373c;color:#fff;border-radius:10px;padding:10px 11px;outline:none}.setup-card textarea{min-height:110px;resize:vertical}.setup-card input:focus,.setup-card textarea:focus{border-color:#815845}.setup-state{display:grid;gap:10px}.setup-status{padding:15px;border:1px dashed #3b3d42;border-radius:12px;background:#131416;color:var(--muted)}.setup-status.ok{border-style:solid;border-color:#506a55;color:#d8e6d8;background:#151b16}.setup-status.bad{border-style:solid;border-color:#764744;color:#efc0bc;background:#1d1515}.setup-kv{display:grid;grid-template-columns:1fr 1fr;gap:8px}.setup-kv div{padding:10px;border:1px solid #303237;border-radius:10px;background:#131416}.setup-kv span{display:block;font-size:.66rem;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}.setup-kv b{display:block;margin-top:4px}.setup-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}.setup-note{margin-top:16px;padding:15px;border-radius:12px;border:1px solid #34363b;background:#151618;color:#aaa8a3;line-height:1.55}.setup-note code{color:#e6c3a8}.setup-top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:24px}.setup-brand{display:flex;align-items:center;gap:10px;color:white;text-decoration:none}.setup-brand .brand-seal{flex:0 0 auto}.setup-brand b{display:block;letter-spacing:.12em;font-size:.85rem}.setup-brand small{display:block;color:var(--muted);font-size:.6rem;letter-spacing:.14em;margin-top:2px}@media(max-width:800px){.setup-grid{grid-template-columns:1fr}.setup-kv{grid-template-columns:1fr}.setup-top{align-items:flex-start;flex-direction:column}}
+  </style>
+  <link rel="stylesheet" href="/css/kage-13.css?v=14.5.0" />
+<link rel="stylesheet" href="/css/kage-obsidian-156.css?v=156">
+<link rel="stylesheet" href="/css/kage-map-stable-175.css?v=14.7.5" />
+</head>
+<body>
+  <div class="grain"></div>
+  <div class="setup-wrap">
+    <div class="setup-top">
+      <a class="setup-brand" href="/"><span class="brand-seal">忍</span><span><b>KAGE//ZERO</b><small>DATABASE DOCTOR</small></span></a>
+      <div class="setup-actions"><a class="soft-button" href="/">Главная</a><a class="soft-button gm" href="/gm-login">GM-вход</a></div>
+    </div>
+    <header class="setup-hero">
+      <div class="eyebrow">SETUP // V6.0.0</div>
+      <h1>Подключение базы</h1>
+      <p>Эта страница независима от основной панели. Даже если основной интерфейс сломается, здесь всегда можно проверить Supabase и понять, установлено ли обновление v5.0.</p>
+    </header>
+    <section class="setup-grid">
+      <form id="setup-form" class="panel setup-card">
+        <div class="section-head"><h2>Supabase</h2><span class="chip">browser key</span></div>
+        <label>Project URL<input id="url" autocomplete="off" placeholder="https://xxxxx.supabase.co" /></label>
+        <label>Publishable key<textarea id="key" spellcheck="false" placeholder="sb_publishable_..."></textarea></label>
+        <div class="setup-actions"><button class="button" type="submit">Сохранить и проверить</button><button class="soft-button" type="button" id="check">Проверить ещё раз</button><button class="soft-button" type="button" id="defaults">Вернуть настройки проекта</button></div>
+      </form>
+      <article class="panel setup-card">
+        <div class="section-head"><h2>Состояние</h2><span id="badge" class="chip">не проверено</span></div>
+        <div id="status" class="setup-status">Нажми «Проверить ещё раз».</div>
+        <div id="details" class="setup-kv" style="margin-top:10px"></div>
+        <div class="setup-note"><b>Если у тебя уже установлена схема 5.0:</b><br>сделай резервную копию, затем один раз выполни целиком <code>supabase/UPGRADE_5_1.sql</code>. Если текущая схема 4.6, сначала используй UPGRADE_5_0.sql на резервной копии. Старых персонажей файл не удаляет.</div>
+      </article>
+    </section>
+  </div>
+<script>
+(() => {
+  const DEFAULT = {url:'https://abzmiezrtbdnkorzcshn.supabase.co',key:'sb_publishable_mS7LVCXKi3uuuOt79zhcvQ_QrXJQ_vA'};
+  const STORE='kz_v4_supabase_config';
+  const $=q=>document.querySelector(q);
+  const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  function load(){try{return {...DEFAULT,...JSON.parse(localStorage.getItem(STORE)||'{}')}}catch{return {...DEFAULT}}}
+  function save(){localStorage.setItem(STORE,JSON.stringify({url:$('#url').value.trim().replace(/\/$/,''),key:$('#key').value.trim()}))}
+  function fill(){const c=load();$('#url').value=c.url||'';$('#key').value=c.key||''}
+  function state(text,kind=''){const s=$('#status');s.className='setup-status '+kind;s.innerHTML=text;$('#badge').textContent=kind==='ok'?'готово':kind==='bad'?'ошибка':'проверка'}
+  async function check(){
+    save(); const c=load(); $('#details').innerHTML='';
+    if(!c.url||!c.key){state('<b>Не заполнены настройки.</b><br>Укажи URL и publishable key.','bad');return}
+    state('Проверяю Supabase…');
+    try{
+      const res=await fetch(c.url+'/rest/v1/rpc/kz_health',{method:'POST',headers:{apikey:c.key,'Content-Type':'application/json',Accept:'application/json'},body:'{}',cache:'no-store'});
+      const raw=await res.text(); let data; try{data=raw?JSON.parse(raw):null}catch{data=raw}
+      if(!res.ok){
+        const msg=data?.message||data?.hint||raw||('HTTP '+res.status);
+        if(/Could not find the function|PGRST202|schema cache/i.test(msg)) state('<b>Сервер доступен, но нужна миграция схемы 5.1.</b><br>Выполни <code>supabase/UPGRADE_5_1.sql</code> целиком.','bad');
+        else state('<b>Supabase ответил ошибкой.</b><br>'+esc(msg),'bad');
+        return;
+      }
+      const schema=data?.schema||data?.schema_version||'?';
+      if(String(schema)!=='5.1') state('<b>Связь работает, но нужна схема 5.1.</b><br>Выполни <code>supabase/UPGRADE_5_1.sql</code> целиком.','bad');
+      else state('<b>База готова.</b><br>Связь с Supabase работает, схема 5.1 установлена.','ok');
+      const vals=[['Схема',schema],['Персонажей',data?.characters??0],['Кланов',data?.clans??0],['Техник',data?.techniques??0],['Оружия',data?.weapons??0],['Точек карты',data?.landmarks??0]];
+      $('#details').innerHTML=vals.map(([k,v])=>'<div><span>'+esc(k)+'</span><b>'+esc(v)+'</b></div>').join('');
+    }catch(e){state('<b>Не удалось связаться с Supabase.</b><br>'+esc(e?.message||e),'bad')}
+  }
+  $('#setup-form').addEventListener('submit',e=>{e.preventDefault();check()});
+  $('#check').addEventListener('click',check);
+  $('#defaults').addEventListener('click',()=>{localStorage.setItem(STORE,JSON.stringify(DEFAULT));fill();check()});
+  fill(); check();
+})();
+</script>
+</body>
+</html>
